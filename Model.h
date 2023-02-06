@@ -8,245 +8,22 @@
 #ifndef Model_h
 #define Model_h
 
-
-
 #include <vector>
 #include <random>
-#include "Node.h"
-#include "Layer.h"
 #include "functions.h"
 #include "matrix.h"
 
 using namespace std;
 
-//class Model {
-//
-//public:
-//
-//    Model() {
-//        learning_rate = 0.001;
-//    }
-//
-//    void add_layer(Layer new_layer) {
-//
-//        layers.insert(layers.end(), new_layer);
-//
-//    }
-//
-//    void init_layers(vector <float> input_layer) {
-//
-//        init_input_layer(input_layer);
-//
-//        for (int j = 1; j < layers.size(); j++){
-//            vector <Node>* nodes = layers[j].get_nodes();
-//            for (int i = 0; i < nodes->size(); i++){
-//
-//                unsigned long prev_layer_size = layers[j-1].get_nodes()->size();
-//
-//                init_weights(prev_layer_size, nodes);
-//
-//            }
-//        }
-//    }
-//
-//    // For debug
-//    void print_layers() {
-//
-//        for (int j = 0; j < layers.size(); j++){
-//            vector <Node>* nodes = layers[j].get_nodes();
-//
-//            cout << "Layer " << j << endl;
-//            for (int i = 0; i < nodes->size(); i++){
-//
-//                cout << nodes->at(i).get_value() << " w:";
-//                nodes->at(i).print_weights();
-//                cout << "| ";
-//
-//            }
-//            cout << endl;
-//
-//        }
-//    }
-//
-//
-//    void forward() {
-//        // For each pair of layers:
-//        for (int j = 1; j < layers.size(); j++){
-//            vector <Node>* nodes = layers[j].get_nodes();
-//            vector <Node>* prev_nodes = layers[j-1].get_nodes();
-//
-//            // For each set of nodes in that layer:
-//            for (int i = 0; i < nodes->size(); i++){
-//                vector <float> cur_weights = nodes->at(i).get_weights();
-//
-//                float weighted_sum = 0;
-//                // For all the weights in the layer, compute weighted sums
-//                for (int y = 0; y < cur_weights.size(); y++){
-//
-//                    weighted_sum += prev_nodes->at(y).get_value() * cur_weights[y];
-//                }
-//
-//                // Add bias
-//                weighted_sum += nodes->at(i).get_bias();
-//
-//                // Call activation functon
-//                float output = layers[j].call_activation_function(weighted_sum);
-//
-//                // Update new nodes' value
-//                nodes->at(i).update_value(output);
-//
-//            }
-//
-//        }
-//    }
-//
-//
-//
-//    void backward(float loss_calculation, vector<float> label_key)
-//    {
-//        // Compute last layer weight adjustment
-//        vector<Layer>::reverse_iterator beginning = layers.rend() - 1;
-//
-//        bool last_layer = true;
-//        for (vector<Layer>::reverse_iterator it = layers.rbegin(); it != beginning; ++it) {
-//            // TODO
-//
-//            /*
-//             Alternative idea: have a vector that always stores the previous piece of information necessary. That way, accessing previous layers is not necessary and possibly loss does not need to be dealt with weirdly.
-//             */
-//            vector <Node>* nodes = it->get_nodes();
-//
-//            // something to do with loss
-//            if (last_layer) {
-//                // If RELU activation
-//                function <float (float) > test = activation::Sigmoid;
-//                if (it->return_activation_function() == test) {
-//                    // For each node to be updated
-//                    for (int i = 0; i < nodes->size(); i++)
-//                    {
-//                        float yhat = nodes->at(i).get_value();
-//                        float y = label_key[i];
-//
-//                        // dLoss / dOutput * dOutput / dsum * dSum / dWeight
-//
-//                        // for each weight in that node
-//                        vector<float> weights = nodes->at(i).get_weights();
-//                        for (int j = 0; j < weights.size(); j++){
-//                            float last_value = (it + 1)->get_nodes()->at(j).get_value();
-//                            float pd = (-1 * y / yhat) * (yhat * (1 - yhat)) * (last_value);
-//                            float new_weight = yhat + pd * learning_rate;
-//
-//                            weights[j] = new_weight;
-//
-//                        }
-//
-//
-//                        //RELU
-//                        //if (yhat <= 0) pd = 0; else pd = -1 * y / yhat * last_value;
-//
-//
-//                    }
-//                }
-//
-//                last_layer = false;
-//            }
-//            // something to do with just raw sums
-//            else {
-//                if (it->return_activation_function() == activation::Sigmoid) {
-//                    for (int i = 0; i < nodes->size(); i++)
-//                    {
-//                        float yhat = nodes->at(i).get_value();
-//                        float y = label_key[i];
-//
-//                        // dLoss / dOutput * dOutput / dsum * dSum / dWeight
-//
-//                        // for each weight in that node
-//                        vector<float> weights = nodes->at(i).get_weights();
-//                        for (int j = 0; j < weights.size(); j++){
-//
-//
-//
-////                            float last_value = (it + 1)->get_nodes()->at(j).get_value();
-////                            float cur_weight = (it - 1)->get_nodes()->at(j).get_weights()[i];
-////                            float pd =  * (yhat * (1 - yhat)) * (last_value);
-////                            float new_weight = yhat + pd * learning_rate;
-////
-////                            weights[j] = new_weight;
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//        }
-//    }
-//
-//
-//    vector <float> output() {
-//        vector <float> my_out;
-//        vector <Node>* final_layer = layers[layers.size() - 1].get_nodes();
-//        for (int i = 0; i < final_layer->size(); i++)
-//        {
-//            my_out.insert(my_out.end(), final_layer->at(i).get_value());
-//        }
-//
-//
-//        return my_out;
-//    }
-//
-//    void set_learning_rate(float new_lr) {
-//        learning_rate = new_lr;
-//    }
-//
-//
-//private:
-//
-//    vector <Layer> layers;
-//    std::default_random_engine generator;
-//
-//    float learning_rate;
-//
-//
-//    void init_weights(unsigned long prev_layer_size, vector <Node>* nodes) {
-//
-//        float stddv = prev_layer_size == 0 ? 1: 1.0 / prev_layer_size;
-//        std::normal_distribution<float> distribution(0.0,stddv);
-//
-//        for (int i = 0; i < nodes->size(); i++) {
-//            float weight = distribution(generator);
-//            nodes->at(i).add_weight(weight);
-//        }
-//
-//    }
-//
-//    void init_input_layer(vector <float> input) {
-//        if (layers.size() <= 0 or input.size() != layers[0].get_nodes()->size() ) {
-//            cerr << "Error in inputing 1st layer into empty model" << endl;
-//            assert(false);
-//        }
-//
-//        else {
-//            for (int i = 0; i < input.size(); i++ )
-//            {
-//                // Initalize every element of the first layer to the input vector
-//                layers[0].get_nodes()->at(i).update_value(input[i]);
-//            }
-//
-//        }
-//    }
-//
-//};
-
 class Model {
 public:
     
-    Model (int i_layer_size, string loss, float lr) {
+    Model (int i_layer_size, string loss_type_, float lr) {
         input_layer_size = i_layer_size;
-        loss_type = loss;
+        loss_type = loss_type_;
         learning_rate = lr;
+        iterations = 0;
+        loss = 0;
         model = {};
     }
     
@@ -262,17 +39,21 @@ public:
             }
             delete cur_layer;
         }
-        
+
+    }
+    
+    // Necessary for prevention of memory leak if only forward passes are being called.
+    void clear_layer_outputs ()
+    {
         // Delete all members of layer outputs
         for (int i = 0; i < layer_outputs.size(); i++)
         {
             delete layer_outputs[i];
         }
-
     }
     
     float get_loss() {
-        return loss;
+        return loss / iterations;
     }
     
     void add_layer(int layer_size, string activation){
@@ -303,7 +84,6 @@ public:
             // Add bias
             new_node->push_back(1);
             
-            
             // Insert new layer
             new_layer->push_back(new_node);
         }
@@ -320,7 +100,8 @@ public:
         
         // Init layer outputs
         layer_outputs = {};
-//        // Bias
+        
+        // Bias
         input_vector.push_back(1);
         
         vector <float>* successor = &input_vector;
@@ -331,8 +112,7 @@ public:
         
         // For each layer in the model
         for (int i = 0; i < model.size(); i++) {
-//            cout << endl;
-//            cout << i <<" pass"<< endl;
+
             // For each node in the layer
             vector<vector<float>*>* cur_layer = model.at(i);
             
@@ -359,7 +139,8 @@ public:
             
         float cur_loss = categorical_crossentropy(label, model_prediction);
         
-        loss = cur_loss;
+        loss += cur_loss;
+        iterations++;
         
         vector <vector < vector<float> *> *> deltas;
 
@@ -375,10 +156,10 @@ public:
 
                 for (int j = 0; j < label.size(); j++)
                 {
-//                     vanilla loss
+                    // error loss
                     error.push_back(model_prediction[j] - label[j]);
-
-                    //error.push_back(-1*(label[j] + 0.1) / model_prediction[j]);
+                    
+                    
                 }
 
                 if (activations[i-1] == "Sigmoid") {
@@ -389,10 +170,6 @@ public:
                     assert(false);
                 }
 
-//                    // calculate loss times derivative of activation function.
-//                    for (int x : *sd) {
-//                        x *= loss;
-//                    }
 
                 for (int j = 0; j < error.size(); j++)
                 {
@@ -401,7 +178,7 @@ public:
 
                 vector <vector<float>*>* to_push = new vector<vector<float>*>;
                 to_push->push_back(sd);
-//                    cout << sd[0].size() << "bananas";
+
                 deltas.push_back(to_push);
 
                 }
@@ -409,30 +186,19 @@ public:
 
             // Other layers:
             else {
-                /*
-
-                 there is a chance here that the sizes are being stored incorrectly. I should use this transpose insead, but it for some reason is not necessary.
-
-                 */
+   
                 matrix_transpose transpose(*model[i]);
                 vector <vector<float>*> matrix_transp = transpose.matrix_return();
                 vector <vector<float>*> last_delta = *deltas.at(deltas.size() - 1);
                 
-//                    cout << "LD:" << last_delta.size() << " rows by " << last_delta[0]->size() << " columns";
-//                    cout << "MT:" << matrix_transp.size() << " rows by " << matrix_transp[0]->size() << " columns";
                 
                 if (deltas.size() > 1)
                 {
-//                        cout << endl;
                     last_delta.at(0)->pop_back();
-//                        cout << "fuck you eric "<< last_delta.at(0)->size() << endl;
                 }
 
                 matrix_dot m(last_delta,*model[i]);
                 vector<float>* new_delta = new vector<float>(*m.matrix_return()[0]);
-
-//                    cout << new_delta.size() << " rows by " << new_delta[0]->size() << " columns";
-                //new_delta = multiply(new_delta, )
 
                 vector<float> sd = sigmoid_derivative(*layer_outputs[i]);
                 
@@ -441,7 +207,6 @@ public:
                 {
                     new_delta->at(j) *= layer_outputs[i]->at(j);
                     new_delta->at(j) *= sd[j];
-                    //float p = layer_outputs[i]->at(j);
                 }
 
                 vector <vector<float>*>* to_push = new vector<vector<float>*>;
@@ -457,7 +222,7 @@ public:
         deltas.at(deltas.size() - 1)->at(0)->pop_back();
         // End backwards iterate
 
-        // Begin weight adjustment
+        // Since deltas are added iteratively before, they must be reversed to reflect the order of the layers
         reverse(deltas.begin(), deltas.end());
 
         assert(deltas.size() == model.size());
@@ -469,31 +234,16 @@ public:
             
             matrix_transpose m( {layer_outputs[i]} );
             vector <vector<float>*> layer_output_transpose = m.matrix_return();
-
-//                cout << "lot rows: " << layer_output_transpose.size() << endl;
-//                cout << "lot cols: " << layer_output_transpose[0]->size() << endl;
-//                cout << endl;
-//                cout << "respective delta rows: " << deltas[i]->size() << endl;
-//                cout << "respective delta columns: " << deltas[i]->at(0)->size() << endl;
-
-            // dot transpose with delta vector
+            
+            // Dot this layer transpose with the delta corresponding to this later
             matrix_dot m2(layer_output_transpose, *deltas[i]);
             vector <vector<float>*> partial_derivative_matrix = m2.matrix_return();
 
+            // Tranpose again
             matrix_transpose m3(partial_derivative_matrix);
             vector <vector<float>*> pdm_final = m3.matrix_return();
 
-//                cout << "pdm rows: " << partial_derivative_matrix.size() << endl;
-//                cout << "pdm cols: " << partial_derivative_matrix[0]->size() << endl;
-//
-//                cout << "model i rows: " << model[i]->size() << endl;
-//                cout << "model i cols: " << model[i]->at(0)->size() << endl;
-            
-            
-            
-//            vector<vector<float>*>* temp = new vector<vector<float>*>(subtract(*model[i], multiply(pdm_final, learning_rate)));
-//            delete model.at(i);
-//            model.at(i) = temp;
+            // Multiply by learning rate and subtract to get adjusted weights
             *model.at(i) = subtract(*model[i], multiply(pdm_final, learning_rate));
             
         }
@@ -518,8 +268,15 @@ public:
     }
         
         
-        
+    void set_lr (float new_lr)
+    {
+        learning_rate = new_lr;
+    }
     
+    float get_lr ()
+    {
+        return learning_rate;
+    }
     
     vector <vector < vector<float>*>*> get_model() {
         return model;
@@ -551,6 +308,7 @@ private:
     float learning_rate;
     
     float loss;
+    float iterations;
     
     
     std::default_random_engine generator;
@@ -603,7 +361,7 @@ private:
         return input;
     }
     
-    // Add every element of matrices A and B together
+    // Subtract every element of matrices A and B together
     vector <vector <float>*> subtract (vector<vector<float>*> A, vector<vector<float>*> B)
     {
         assert(A.size() == B.size() && ( (A[0]->size() == B[0]->size()) || (B.size() == 0 && A.size() == 0) ) );
@@ -618,16 +376,6 @@ private:
         }
         
         return A;
-    }
-    
-    
-    vector <float> add(vector<float> input, float addition) {
-        for (int i = 0; i < input.size(); i++)
-        {
-            input[i] += addition;
-        }
-        
-        return input;
     }
     
     vector <float> activate(vector<float> input, string activation) {
@@ -668,8 +416,7 @@ private:
             if (y[j] == 0) {
                 continue;
             }
-//            cout << "-1*y[j] is " << -1*y[j] << endl;
-//            cout << "log(yhat[j]) is " << log(yhat[j]) << endl;
+
             loss += -1*y[j] * log(yhat[j]);
         }
             
